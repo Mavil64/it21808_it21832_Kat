@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Estates</title>
+</head>
+<body>
+<div layout:fragment="main-content">
+    <div th:if="${ not#lists.isEmpty(estates)}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Estate Name</th>
+                <th>Type</th>
+                <th>Is Available</th>
+                <th>Rent</th>
+                <th>Area (sq ft)</th>
+                <th>Bedrooms</th>
+                <th>Bathrooms</th>
+                <th>Built Year</th>
+                <th>Description</th>
+                <th>Address</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="estate : ${estates}">
+                <td th:text="${estate.estate_id}"></td>
+                <td th:text="${estate.estate_name}"></td>
+                <td th:text="${estate.estate_type}"></td>
+                <td th:text="${estate.rent}"></td>
+                <td th:text="${estate.area}"></td>
+                <td th:text="${estate.bedrooms}"></td>
+                <td th:text="${estate.bathrooms}"></td>
+                <td th:text="${estate.built_year}"></td>
+                <td th:text="${estate.description}"></td>
+                <td th:text="${estate.address}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${ #lists.isEmpty(estates)}">
+        No Estates found!
+    </div>
+    <a href="/realestate/new" class="btn btn-primary" role="button">Submit New Estate</a>
+</div>
+
+</body>
+</html>

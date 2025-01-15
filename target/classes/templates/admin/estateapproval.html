@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Estate Approval</title>
+</head>
+<body>
+<div layout:fragment="main-content">
+    <h1>Estate Approval</h1>
+
+    <!-- Display the prompt message -->
+    <div>
+        <label for="prompt">Message:</label>
+        <textarea id="prompt" class="form-control" rows="4" readonly th:text="${prompt}"></textarea>
+    </div>
+
+    <!-- Form for submitting estate ID -->
+    <form th:action="@{/admin/estateapproval}" method="post">
+        <div class="form-group">
+            <label for="estateid">Estate ID</label>
+            <input type="number" id="estateid" class="form-control" name="estateid"
+                   th:value="${estateid}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Approve</button>
+    </form>
+</div>
+</body>
+</html>

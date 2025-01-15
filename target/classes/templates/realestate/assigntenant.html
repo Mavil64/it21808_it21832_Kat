@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${estate.estate_name}"></title>
+</head>
+<body>
+
+<div layout:fragment="main-content">
+  <p th:text="'assign Tenant to  '+ ${estate.estate_name}"></p>
+  <form action="#" th:action="@{/realestate/assign/{estateid}(estateid=${estate.getEstate_id()})}" th:object="${estate}"
+        method="post">
+    <select name="tenant">
+      <option th:each="tenant : ${tenants}"
+              th:value="${tenant.get()}"
+              th:text="${tenant.get() + ' ' +teacher.getLastName()}"></option>
+    </select>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+  </form>
+</div>
+</html>
