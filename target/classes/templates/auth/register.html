@@ -7,20 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <script>
-        // JavaScript function to update roleStr dynamically
-        function updateRoleStr() {
-            const roles = [];
-            if (document.getElementById("role_tenant").checked) {
-                roles.push("ROLE_TENANT");
-            }
-            if (document.getElementById("role_renter").checked) {
-                roles.push("ROLE_RENTER");
-            }
-            // Update the hidden input field with the concatenated roles
-            document.getElementById("roleStr").value = roles.join(",");
-        }
-    </script>
+
 </head>
 <body>
 <div layout:fragment="main-content">
@@ -42,13 +29,29 @@
             <input type="password" class="form-control" id="password" th:field="*{password}"/>
         </div>
         <div class="form-group row">
-            <label>Roles:</label>
-            <input type="checkbox" name="roles" value="ROLE_TENANT"> Renter<br>
-            <input type="checkbox" name="roles" value="ROLE_RENTER"> Tenant<br>
-            <button type="submit">Submit</button>
-        <div>
-            <input type="submit" class="btn btn-primary" value="Sign Up"/>
+            <label>Roles</label><br/>
+            <!-- Checkboxes for Roles -->
+           <div><input type="checkbox" name="roleStr" value="ROLE_TENANT"
+                       th:checked="${#strings.contains(user.roleStr, 'ROLE_TENANT')}" />
+               </label>
+               Tenant<br/>
+           </div>
+           <div>
+                <label>
+
+                <label>
+                    <input type="checkbox" name="roleStr" value="ROLE_RENTER"
+                           th:checked="${#strings.contains(user.roleStr, 'ROLE_RENTER')}" />
+                </label></div>
+
+            Renter<br/>
+           </div>
+        <div th:if="${error}">
+            <div class="alert alert-danger" th:text="${error}"></div>
         </div>
+
+
+        <input type="submit" class="btn btn-primary" value="Sign Up"/>
     </form>
     <div th:text="${msg}"></div>
 </div>

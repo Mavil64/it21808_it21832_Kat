@@ -4,7 +4,7 @@ import gr.hua.dit.ds.ds_lab_2024.entities.Role;
 import gr.hua.dit.ds.ds_lab_2024.entities.User;
 import gr.hua.dit.ds.ds_lab_2024.repository.RoleRepository;
 import gr.hua.dit.ds.ds_lab_2024.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -52,11 +52,13 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void saveUser(User user, Set<String> roleNames) {
+
+       try{
         // Encode the password
         String passwd = user.getPassword();
         String encodedPassword = passwordEncoder.encode(passwd);
         user.setPassword(encodedPassword);
-
+        System.out.println(roleNames);
         // Retrieve roles based on the provided role names
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {
@@ -64,8 +66,15 @@ public class UserService implements UserDetailsService {
                     .orElseThrow(() -> new RuntimeException("Error: Role " + roleName + " is not found."));
             roles.add(role);
         }
+        System.out.println("this is the Role set" + roles);
         user.setRoles(roles);
+        System.out.println("these are the roles saved in the user object " + user.getRoles().toString());
         userRepository.save(user);
+        System.out.println("User saved: " + user.getUsername());}catch(Exception e)
+       {
+           System.err.println("Exception occurred during saveUser: " + e.getMessage());
+           e.printStackTrace();
+       }
     }
 
     @Transactional

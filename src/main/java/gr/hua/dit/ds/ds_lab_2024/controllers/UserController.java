@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -31,8 +32,6 @@ public class UserController {
     @GetMapping("/register")
     public String register(Model model) {
         User user = new User();
-        List<String> availableRoles = Arrays.asList("ROLE_TENANT", "ROLE_RENTER");
-        model.addAttribute("availableRoles", availableRoles);
         System.out.println("Inside @GetMapping /register");
         model.addAttribute("user", user);
         return "auth/register";
@@ -40,10 +39,13 @@ public class UserController {
 
     @PostMapping("/register")
     public String saveUser(@ModelAttribute("user") User user,
-                               @RequestParam(value = "roles", required = false) List<String> roles,
                                Model model) {
         System.out.println("Inside @PostMapping /register");
 
+        if (!isValidEmail(user.getEmail())) {
+            model.addAttribute("error", "Invalid email format. Please enter a valid email.");
+            return "auth/register"; // Return to registration page with error message
+        }
 
         if (user == null) {
             System.out.println("User is null!");
@@ -51,10 +53,11 @@ public class UserController {
             System.out.println("User: " + user);
         }
 
+        System.out.println(user.getRoleStr());
         System.out.println("test");
         // Call saveUser with the selected roles
         try {
-            userService.saveUser(user, new HashSet<>(roles)); // Convert List<String> to HashSet<String>
+            userService.saveUser(user,  new HashSet<>(Arrays.asList(user.getRoleStr().split("\\s*,\\s*")))); // Convert List<String> to HashSet<String>
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             return "auth/register";
@@ -63,6 +66,13 @@ public class UserController {
         // Redirect to login or success page
         //return "redirect:/login";
         return "index";
+    }
+
+    private boolean isValidEmail(String email) {
+        // Simple regex for basic email validation
+        String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        return pattern.matcher(email).matches();
     }
 
 
