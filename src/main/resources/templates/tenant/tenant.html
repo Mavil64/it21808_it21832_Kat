@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tenant Profile</title>
 </head>
 <body>
+<div layout:fragment="main-content">
+        <div class="container mt-4">
+            <h2>Your Profile</h2>
+            <div class="card" style="background-color: #171a1d;">
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">ID</dt>
+                        <dd class="col-sm-9" th:text="${tenant.id}"></dd>
 
+                        <dt class="col-sm-3">Username</dt>
+                        <dd class="col-sm-9" th:text="${tenant.username}"></dd>
+
+                        <dt class="col-sm-3">Email</dt>
+                        <dd class="col-sm-9" th:text="${tenant.email}"></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+
+</div>
 </body>
 </html>

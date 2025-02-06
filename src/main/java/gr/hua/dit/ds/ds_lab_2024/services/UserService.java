@@ -4,6 +4,7 @@ import gr.hua.dit.ds.ds_lab_2024.entities.Role;
 import gr.hua.dit.ds.ds_lab_2024.entities.User;
 import gr.hua.dit.ds.ds_lab_2024.repository.RoleRepository;
 import gr.hua.dit.ds.ds_lab_2024.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -34,21 +36,6 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /*@Transactional
-    public Integer saveUser(User user) {
-        String passwd= user.getPassword();
-        String encodedPassword = passwordEncoder.encode(passwd);
-        user.setPassword(encodedPassword);
-
-        Role role = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        Set<Role> roles = new HashSet<>();
-        roles.add(role);
-        user.setRoles(roles);
-
-        user = userRepository.save(user);
-        return user.getId();
-    }*/
 
     @Transactional
     public void saveUser(User user, Set<String> roleNames) {
@@ -85,22 +72,30 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> opt = userRepository.findByUsername(username);
+        Optional<User> opt = userRepository.findByEmail(username);
 
-        if(opt.isEmpty())
-            throw new UsernameNotFoundException("User with email: " +username +" not found !");
-        else {
+        if (opt.isEmpty()) {
+            throw new UsernameNotFoundException("User with email: " + username + " not found!");
+        } else {
             User user = opt.get();
             return new org.springframework.security.core.userdetails.User(
                     user.getEmail(),
                     user.getPassword(),
-                    user.getRoles()
-                            .stream()
-                            .map(role-> new SimpleGrantedAuthority(role.toString()))
-                            .collect(Collectors.toSet())
+                    convertRolesToAuthorities(user.getRoles()) // Use the correct method!
             );
         }
     }
+
+    private Collection<? extends GrantedAuthority> convertRolesToAuthorities(Set<Role> roles) {
+        System.out.println("Converted roles: " + roles);
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(
+                        role.getName().startsWith("ROLE_") ? role.getName() : "ROLE_" + role.getName()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 
     @Transactional
     public Object getUsers() {
