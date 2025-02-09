@@ -9,6 +9,7 @@
     <title>Login</title>
 </head>
 <body>
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 <div layout:fragment="main-content">
 
     <div th:if="${ not#lists.isEmpty(users)}">
@@ -24,14 +25,25 @@
             <tr th:each="user : ${users}">
                 <td th:text="${user.username}"></td>
                 <td th:text="${user.email}"></td>
-                <td th:if="${user.id}"><a class="btn btn-info" th:href="@{/user/{id}(id=${user.id})}">Edit</a>
-                    <span th:each="role : ${user.roles}">
-                    <a class="btn btn-danger" th:href="@{/user/role/delete/{id}/{role_id}(id=${user.id},role_id=${role.id})}" th:utext="'Delete '+  ${role.name}"/>
-                </span>
-                    <span th:each="role : ${roles}">
-                        <a  class="btn btn-success" th:href="@{/user/role/add/{id}/{role_id}(id=${user.id},role_id=${role.id})}" th:if="${! user.roles.contains(role)}" th:utext="'Add ' + ${role.name}"></a>
+                <td th:if="${user.id}">
+                    <!-- Edit Button -->
+                    <a class="btn btn-info" th:href="@{/user/{id}(id=${user.id})}">Edit</a>
 
-                    </span>
+                    <!-- Delete Role Buttons -->
+                    <span th:each="role : ${user.roles}">
+                    <a th:if="${role.name != 'ROLE_ADMIN'}"
+                    class="btn btn-danger"
+                    th:href="@{/user/role/delete/{id}/{role_id}(id=${user.id},role_id=${role.id})}"
+                    th:utext="'Delete ' + ${role.name}"></a>
+            </span>
+
+                    <!-- Add Role Buttons -->
+                    <span th:each="role : ${roles}">
+        <a th:if="${!user.roles.contains(role) and role.name != 'ROLE_ADMIN'}"
+           class="btn btn-success"
+           th:href="@{/user/role/add/{id}/{role_id}(id=${user.id},role_id=${role.id})}"
+           th:utext="'Add ' + ${role.name}"></a>
+    </span>
                 </td>
 
             </tr>

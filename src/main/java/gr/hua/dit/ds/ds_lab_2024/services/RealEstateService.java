@@ -37,10 +37,12 @@ public class RealEstateService
     }
 
     @Transactional
-    public void assignTenanttoEstate(int id, Tenant tenant)
+    public void assignTenanttoEstate(int id, User tenant)
     {
         RealEstate estate = realEstateRepository.findById(id).get();
         estate.setTenant(tenant);
+        saveEstate(estate);
         System.out.println(estate.getTenant().toString());
     }
+
 }

@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}" xmlns:sec="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tenants</title>
 </head>
 <body>
-
+<div layout:fragment="main-content">
+    <div th:if="${ not#lists.isEmpty(tenants)}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tenant : ${tenants}">
+                <td th:text="${tenant.username}"></td>
+                <td th:text="${tenant.email}"></td>
+                <td>
+                    <a  class="btn btn-outline-light btn-sm" th:href="@{'/tenant/' + ${tenant.id}}">Details</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${ #lists.isEmpty(tenants)}">
+        No Tenants found!
+    </div>
+    <a sec:authorize="hasRole('ADMIN')" href="/tenant/register" class="btn btn-primary" role="button">Create new Tenant</a>
+</div>
 </body>
 </html>

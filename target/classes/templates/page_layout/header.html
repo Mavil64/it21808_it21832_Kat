@@ -5,19 +5,19 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Rent a Thingy</title>
 </head>
 <body>
 
 <header class="masthead mb-auto" th:fragment="header">
     <div class="inner">
-        <h2 class="masthead-brand">Cover</h2>
+        <h2 class="masthead-brand">Rent A Thingy</h2>
         <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link" href="/" data-path="/" >Home</a>
-            <a class="nav-link" href="/student" data-path="/student">Students</a>
-            <a class="nav-link" href="/teacher" data-path="/teacher" >Teachers</a>
-            <a class="nav-link" href="/course" data-path="/course">Courses</a>
-            <a class="nav-link" th:href="@{/tenant}" data-path="/tenant">Tenants</a>
+            <a class="nav-link" th:href="@{/realestate/estates}" data-path="/estates">Properties</a>
+            <a sec:authorize="hasRole('RENTER')"class="nav-link" th:href="@{/realestate/new}" data-path="/realestate">New RealEstate</a>
+            <a class="nav-link" th:href="@{/tenant/tenants}" data-path="/tenants">Tenants</a>
+            <a sec:authorize="hasRole('TENANT')"class="nav-link" th:href="@{/tenant}" data-path="/tenant">Tenant profile</a>
             <a sec:authorize="hasRole('TENANT')" class="nav-link" href="/users">Users</a>
             </a>
             <a sec:authorize="!isAuthenticated()"  class="nav-link">

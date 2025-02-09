@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{page_layout/layout}">
+      layout:decorate="~{page_layout/layout}" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -45,7 +45,7 @@
     <div th:if="${ #lists.isEmpty(estates)}">
         No Estates found!
     </div>
-    <a href="/realestate/new" class="btn btn-primary" role="button">Submit New Estate</a>
+    <a sec:authorize="hasRole('RENTER')" href="/realestate/new" class="btn btn-primary" role="button">Submit New Estate</a>
 </div>
 
 </body>

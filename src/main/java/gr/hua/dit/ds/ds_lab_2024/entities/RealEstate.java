@@ -42,11 +42,11 @@ public class RealEstate
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "owner_id")  // This is where the owner_id column is referenced in the estates table
-    private Renter renter;
+    private User renter;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="tenant_id")
-    private Tenant tenant;
+    private User tenant;
 
     public RealEstate() {
 
@@ -140,19 +140,19 @@ public class RealEstate
         this.description = description;
     }
 
-    public Renter getRenter() {
+    public User getRenter() {
         return renter;
     }
 
-    public void setRenter(Renter renter) {
+    public void setRenter(User renter) {
         this.renter = renter;
     }
 
-    public Tenant getTenant() {
+    public User getTenant() {
         return tenant;
     }
 
-    public void setTenant(Tenant tenant) {
+    public void setTenant(User tenant) {
         this.tenant = tenant;
     }
 

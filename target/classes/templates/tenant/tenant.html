@@ -9,25 +9,46 @@
 </head>
 <body>
 <div layout:fragment="main-content">
-        <div class="container mt-4">
-            <h2>Your Profile</h2>
-            <div class="card" style="background-color: #171a1d;">
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-3">ID</dt>
-                        <dd class="col-sm-9" th:text="${tenant.id}"></dd>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4" style="color: #ffffff;">Profile</h2>
+        <div class="card shadow-lg" style="background-color: #2a2e33; border: none;">
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <h4 class="text-white" th:text="${tenant.username}"></h4>
+                        <p class="text-muted" th:text="${tenant.email}"></p>
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-4 text-white">ID</dt>
+                            <dd class="col-sm-8 text-white" th:text="${tenant.id}"></dd>
 
-                        <dt class="col-sm-3">Username</dt>
-                        <dd class="col-sm-9" th:text="${tenant.username}"></dd>
+                            <dt class="col-sm-4 text-white">Username</dt>
+                            <dd class="col-sm-8 text-white" th:text="${tenant.username}"></dd>
 
-                        <dt class="col-sm-3">Email</dt>
-                        <dd class="col-sm-9" th:text="${tenant.email}"></dd>
-                    </dl>
+                            <dt class="col-sm-4 text-white">Email</dt>
+                            <dd class="col-sm-8 text-white" th:text="${tenant.email}"></dd>
+
+                            <dt class="col-sm-4 text-white">Status</dt>
+                            <dd class="col-sm-8"><span class="badge bg-success">Active</span></dd>
+                        </dl>
+
+                        <!-- Show Edit & Delete buttons only if the logged-in user is viewing their own profile -->
+                        <div sec:authorize="isAuthenticated()">
+                            <div th:if="${#authentication.name == tenant.email}">
+                                <a th:href="@{/tenant/edit}" class="btn btn-primary">Edit</a>
+
+                                <!-- Delete Form with Confirmation -->
+                                <form th:action="@{/tenant/delete}" method="post" onsubmit="return confirm('Are you sure you want to delete your profile?');" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
-
-
-</div>
-</body>
+    </div>
+</div></body>
 </html>

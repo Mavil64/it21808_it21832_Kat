@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{page_layout/layout}">
+      layout:decorate="~{page_layout/layout}" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -45,8 +45,12 @@
     <div th:if="${ #lists.isEmpty(estates)}">
         No Estates found!
     </div>
-    <a href="/realestate/new" class="btn btn-primary" role="button">Submit New Estate</a>
+    <a sec:authorize="hasRole('RENTER')" href="/realestate/new" class="btn btn-primary" role="button">Submit New Estate</a>
 </div>
 
 </body>
 </html>
+
+// NEED TO ADD A HIDDEN BUTTON THAT SHOWS UP ONLY IF AN ESTATE IS AVAILABLE AND THE USER IS A TENANT THE WILL
+// CREATE A REQUEST THAT THE RENTERS WILL BE ABLE TO SEE AND APPROVE OR DENY. THE REQUEST MUST BE INITIALIZED
+// AS PENDING.

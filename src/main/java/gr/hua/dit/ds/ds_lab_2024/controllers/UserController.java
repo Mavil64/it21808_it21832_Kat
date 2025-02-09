@@ -5,6 +5,11 @@ import gr.hua.dit.ds.ds_lab_2024.entities.Role;
 import gr.hua.dit.ds.ds_lab_2024.entities.User;
 import gr.hua.dit.ds.ds_lab_2024.repository.RoleRepository;
 import gr.hua.dit.ds.ds_lab_2024.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String saveUser(@ModelAttribute("user") User user,
-                               Model model) {
+    public String saveUser(@ModelAttribute("user") User user, Model model) {
         System.out.println("Inside @PostMapping /register");
 
         if (!isValidEmail(user.getEmail())) {
@@ -76,14 +80,6 @@ public class UserController {
     }
 
 
-    /*@PostMapping("/saveUser")
-    public String saveUser(@ModelAttribute User user, Model model){
-        System.out.println("Roles: "+user.getRoles());
-        Integer id = userService.saveUser(user);
-        String message = "User '"+id+"' saved successfully !";
-        model.addAttribute("msg", message);
-        return "index";
-    }*/
 
     @GetMapping("/users")
     public String showUsers(Model model){
@@ -98,19 +94,9 @@ public class UserController {
         return "auth/user";
     }
 
-    @PostMapping("/user/{user_id}")
-    public String saveStudent(@PathVariable Long user_id, @ModelAttribute("user") User user, Model model) {
-        User the_user = (User) userService.getUser(user_id);
-        the_user.setEmail(user.getEmail());
-        the_user.setUsername(user.getUsername());
-        userService.updateUser(the_user);
-        model.addAttribute("users", userService.getUsers());
-        return "auth/users";
-    }
-
-    @GetMapping("/user/role/delete/{user_id}/{role_id}")
+   @GetMapping("/user/role/delete/{user_id}/{role_id}")
     public String deleteRolefromUser(@PathVariable Long user_id, @PathVariable Integer role_id, Model model){
-        User user = (User) userService.getUser(user_id);
+        User user = userService.getUser(user_id);
         Role role = roleRepository.findById(role_id).get();
         user.getRoles().remove(role);
         System.out.println("Roles: "+user.getRoles());
@@ -118,21 +104,36 @@ public class UserController {
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("roles", roleRepository.findAll());
         return "auth/users";
-
     }
+
+    //Δεν έχω καταλάβει πως να το κάνω να κάνει update τον ρόλο
+    //όπως το έχω κάνει για να κάνει Update τα άλλα στοιχεία για τον authenticated user. χρειάζεται log out log in
+
 
     @GetMapping("/user/role/add/{user_id}/{role_id}")
     public String addRoletoUser(@PathVariable Long user_id, @PathVariable Integer role_id, Model model){
-        User user = (User) userService.getUser(user_id);
+        User user = userService.getUser(user_id);
         Role role = roleRepository.findById(role_id).get();
         user.getRoles().add(role);
         System.out.println("Roles: "+user.getRoles());
         userService.updateUser(user);
+
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("roles", roleRepository.findAll());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails newUserDetails = new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                authentication.getAuthorities()
+        );
+
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(newUserDetails, authentication.getCredentials(), authentication.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
         return "auth/users";
 
     }
+
+
 
 
 }

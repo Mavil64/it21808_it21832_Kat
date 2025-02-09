@@ -1,10 +1,8 @@
 package gr.hua.dit.ds.ds_lab_2024.controllers;
 import gr.hua.dit.ds.ds_lab_2024.entities.RealEstate;
-import gr.hua.dit.ds.ds_lab_2024.entities.Tenant;
-import gr.hua.dit.ds.ds_lab_2024.repository.RealEstateRepository;
+import gr.hua.dit.ds.ds_lab_2024.entities.User;
 import gr.hua.dit.ds.ds_lab_2024.services.RealEstateService;
-import gr.hua.dit.ds.ds_lab_2024.services.RenterService;
-import gr.hua.dit.ds.ds_lab_2024.services.TenantService;
+import gr.hua.dit.ds.ds_lab_2024.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +14,12 @@ import java.util.List;
 @RequestMapping("/realestate")
 public class RealEstateController {
 
-    private RealEstateService  estateServ;
-    private TenantService tenantServ;
-    private RenterService renterServ;
+    private RealEstateService estateService;
+    private UserService userService;
 
-    public RealEstateController(RealEstateService estateServ, TenantService tenantServ, RenterService renterServ) {
-        this.estateServ = estateServ;
-        this.tenantServ = tenantServ;
-        this.renterServ = renterServ;
+    public RealEstateController(RealEstateService estateService, UserService userService) {
+        this.estateService = estateService;
+        this.userService = userService;
     }
 
     private List<RealEstate> estates = new ArrayList<RealEstate>();
@@ -40,22 +36,23 @@ public class RealEstateController {
 
     @PostMapping("/new")
     public String saveEstate(@ModelAttribute("estate") RealEstate estate, Model model){
-        estateServ.saveEstate(estate);
-        model.addAttribute("estates", estateServ.getEstates());
+        estate.setIsapproved(Boolean.FALSE);
+        estateService.saveEstate(estate);
+        model.addAttribute("estates", estateService.getEstates());
         return "realestate/estates";
     }
 
-    @GetMapping("")
+    @GetMapping("/estates")
     public String showEstates(Model model){
-        model.addAttribute("estatelist", estates);
-        return "realestate/realestate";
+        model.addAttribute("estates", estateService.getEstates());
+        return "realestate/estates";
     }
 
     @GetMapping("/assigntenant/{id}")
     public String showAssignTenanttoEstate(@PathVariable int id, Model model)
     {
-        RealEstate estate = estateServ.getEstate(id);
-        List<Tenant> tenants = tenantServ.getTenants();
+        RealEstate estate = estateService.getEstate(id);
+        List<User> tenants = userService.getTenants();
         model.addAttribute("estate", estate);
         model.addAttribute("tenants", tenants);
         return "realestate/assigntenant";
@@ -63,12 +60,13 @@ public class RealEstateController {
 
     @PostMapping("/assigntenant/{id}")
     public String assignTenanttoEstate(@PathVariable int id, @RequestParam(value = "tenant", required = true)
-    int tenantId, Model model) {
+    Long tenantId, Model model) {
         System.out.println(tenantId);
-        Tenant tenant = tenantServ.getTenant(tenantId);
-        RealEstate estate = estateServ.getEstate(id);
-        estateServ.assignTenanttoEstate(id, tenant);
+        User tenant = userService.getUser(tenantId);
+        RealEstate estate = estateService.getEstate(id);
+        estateService.assignTenanttoEstate(id, tenant);
         return "realestate/assigntenant";
     }
+
 
 }
