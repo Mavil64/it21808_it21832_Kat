@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +36,9 @@ public class RealEstateController {
     }
 
     @PostMapping("/new")
-    public String saveEstate(@ModelAttribute("estate") RealEstate estate, Model model){
+    public String saveEstate(@ModelAttribute("estate") RealEstate estate, Model model, Principal principal){
         estate.setIsapproved(Boolean.FALSE);
+        estate.setRenter(userService.getUserByEmail(principal.getName()));
         estateService.saveEstate(estate);
         model.addAttribute("estates", estateService.getEstates());
         return "realestate/estates";
