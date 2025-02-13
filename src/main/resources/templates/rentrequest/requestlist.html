@@ -1,10 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Rent Requests</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
 </head>
 <body>
+<div class="container mt-5">
+    <h1>Rent Requests</h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Approval Status</th>
+            <th>Tenant</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="request : ${requests}">
+            <td th:text="${request.id}">1</td>
+            <td th:text="${request.approvalStatus}">Pending</td>
+            <td th:text="${request.tenant.name}">Tenant Name</td>
+            <td>
 
+                <form th:action="@{'/requests/approve/' + ${request.id}}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                </form>
+
+                <!-- Deny Request Button -->
+                <form th:action="@{'/requests/deny/' + ${request.id}}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                </form>
+
+                <!-- Tenant Details Button -->
+                <a class="btn btn-outline-light btn-sm"
+                   th:href="@{'/tenant/' + ${request.tenant.id}}">
+                    Tenant details
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

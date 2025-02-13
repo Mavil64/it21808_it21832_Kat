@@ -16,21 +16,47 @@ public class AdminService
         this.realEstateRepository = realEstateRepository;
     }
 
+
+
+
+
     @Transactional
     public String approveRealEstate(int id)
     {
         String prompt = "";
         Optional<RealEstate> estate = realEstateRepository.findById(id);
         if(estate.isPresent()) {
-             if (estate.get().isIsapproved()){
+             if (estate.get().getApprovalStatus() == "APPROVED"){
                  prompt += "This Estate is already approved";
             }
              else
              {
-                 estate.get().setIsapproved(true);
+                 estate.get().setApprovalStatus("APPROVED");
                  realEstateRepository.save(estate.get());
                  prompt += "Estate Approved!";
              }
+        }else{
+            prompt += "Entity not found.";
+            System.out.println("Entity not found.");
+        }
+        return prompt;
+    }
+
+    @Transactional
+    public String denyRealEstate(int id)
+    {
+        String prompt = "";
+        Optional<RealEstate> estate = realEstateRepository.findById(id);
+        if(estate.isPresent()) {
+            if (estate.get().getApprovalStatus() == "DENIED"){
+                prompt += "This Estate is already denied";
+            }
+            else
+            {
+                estate.get().setApprovalStatus("DENIED");
+                realEstateRepository.save(estate.get());
+                prompt += "Estate Approved!";
+            }
         }else{
             prompt += "Entity not found.";
             System.out.println("Entity not found.");

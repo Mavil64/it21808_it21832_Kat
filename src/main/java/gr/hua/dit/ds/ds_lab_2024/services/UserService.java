@@ -79,6 +79,12 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
+    public List<User> getRenters()
+    {
+        return filterUsersByRole(userRepository.findAll(), "ROLE_RENTER");
+    }
+
+    @Transactional
     public void updateUser(User user) {
         userRepository.save(user);
     }

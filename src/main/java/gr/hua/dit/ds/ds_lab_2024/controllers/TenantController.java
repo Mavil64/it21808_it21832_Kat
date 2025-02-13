@@ -29,7 +29,6 @@ public class TenantController {
         this.userService = userService;
     }
 
-    private List<User> tenants = new ArrayList<User>();
 
     @GetMapping("/tenants")
     public String showTenants(Model model){
@@ -92,6 +91,6 @@ public class TenantController {
     public String editUserProfile(Model model, Principal principal) {
         User user = userService.getUserByEmail(principal.getName());
         model.addAttribute("user", user);
-        return "tenant/edit"; // Make sure this matches your Thymeleaf template name
+        return "tenant/edit";
     }
 }

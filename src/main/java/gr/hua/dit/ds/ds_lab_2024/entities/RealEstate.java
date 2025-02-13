@@ -35,7 +35,7 @@ public class RealEstate
     private String address;
 
     @Column
-    private Boolean isapproved;
+    private String approvalStatus;
 
     @Column
     private String description;
@@ -124,14 +124,23 @@ public class RealEstate
         this.address = address;
     }
 
-    public Boolean isIsapproved() {
-        return isapproved;
+    public String getApprovalStatus() {
+        return approvalStatus;
     }
 
-    public void setIsapproved(Boolean isapproved) {
-        this.isapproved = isapproved;
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
     }
 
+    /*
+            public Boolean isIsapproved() {
+                return isapproved;
+            }
+
+            public void setIsapproved(Boolean isapproved) {
+                this.isapproved = isapproved;
+            }
+        */
     public String getDescription() {
         return description;
     }
@@ -165,7 +174,6 @@ public class RealEstate
         this.bedrooms = bedrooms;
         this.bathrooms = bathrooms;
         this.built_year = built_year;
-        this.isapproved = false;
         this.description = description;
         this.address = address;
     }
@@ -182,7 +190,7 @@ public class RealEstate
                 ", bathrooms=" + bathrooms +
                 ", built_year=" + built_year +
                 ", address='" + address + '\'' +
-                ", isapproved=" + isapproved +
+                ", Approval status=" + approvalStatus +
                 ", description='" + description + '\'' +
                 ", renter=" + renter +
                 ", tenant=" + tenant +

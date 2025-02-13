@@ -10,7 +10,7 @@
 </head>
 <body>
 <div layout:fragment="main-content">
-    <div th:if="${ not#lists.isEmpty(estates)}">
+    <div th:if="${not #lists.isEmpty(estates)}">
         <table class="table">
             <thead>
             <tr>
@@ -24,10 +24,13 @@
                 <th>Built Year</th>
                 <th>Description</th>
                 <th>Address</th>
+                <th>Approval Status</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="estate : ${estates}">
+                <!--th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') or estate.approvalStatus.name == 'APPROVED'}"-->
                 <td th:text="${estate.estate_id}"></td>
                 <td th:text="${estate.estate_name}"></td>
                 <td th:text="${estate.estate_type}"></td>
@@ -38,19 +41,32 @@
                 <td th:text="${estate.built_year}"></td>
                 <td th:text="${estate.description}"></td>
                 <td th:text="${estate.address}"></td>
+                <td th:text="${estate.approvalStatus}"></td>
+                <td>
+
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
+
+                        <a th:href="@{'/admin/approve/' + ${estate.estate_id}}" class="btn btn-primary">Approve</a>
+                        <a th:href="@{'/admin/deny/' + ${estate.estate_id}}" class="btn btn-danger">Deny</a>
+                    </div>
+
+                    <div sec:authorize="hasRole('ROLE_TENANT')" th:if="${estate.tenant == null}">
+                        <a href="/placeholder-link" class="btn btn-primary">Request to Rent</a>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
-    <div th:if="${ #lists.isEmpty(estates)}">
+    <div th:if="${#lists.isEmpty(estates)}">
         No Estates found!
     </div>
     <a sec:authorize="hasRole('RENTER')" href="/realestate/new" class="btn btn-primary" role="button">Submit New Estate</a>
 </div>
-
 </body>
 </html>
 
-// NEED TO ADD A HIDDEN BUTTON THAT SHOWS UP ONLY IF AN ESTATE IS AVAILABLE AND THE USER IS A TENANT THE WILL
+
+<!--// NEED TO ADD A HIDDEN BUTTON THAT SHOWS UP ONLY IF AN ESTATE IS AVAILABLE AND THE USER IS A TENANT THE WILL
 // CREATE A REQUEST THAT THE RENTERS WILL BE ABLE TO SEE AND APPROVE OR DENY. THE REQUEST MUST BE INITIALIZED
-// AS PENDING.
+// AS PENDING.-->

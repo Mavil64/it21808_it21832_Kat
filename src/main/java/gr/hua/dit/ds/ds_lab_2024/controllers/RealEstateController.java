@@ -37,7 +37,7 @@ public class RealEstateController {
 
     @PostMapping("/new")
     public String saveEstate(@ModelAttribute("estate") RealEstate estate, Model model, Principal principal){
-        estate.setIsapproved(Boolean.FALSE);
+        estate = estateService.setStatus(estate, "PENDING");
         estate.setRenter(userService.getUserByEmail(principal.getName()));
         estateService.saveEstate(estate);
         model.addAttribute("estates", estateService.getEstates());
@@ -69,6 +69,8 @@ public class RealEstateController {
         estateService.assignTenanttoEstate(id, tenant);
         return "realestate/assigntenant";
     }
+
+
 
 
 }

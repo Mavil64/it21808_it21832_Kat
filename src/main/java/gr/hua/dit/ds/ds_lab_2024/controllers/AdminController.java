@@ -21,7 +21,7 @@ public class AdminController {
         this.adminServ = adminServ;
     }
 
-    @GetMapping("/estateapproval")
+    @GetMapping("/approve")
     public String showApproval(Model model){
         int estateid = 0;
         model.addAttribute("estateid", estateid);
@@ -29,11 +29,19 @@ public class AdminController {
 
     }
 
-    @PostMapping("/estateapproval")
-    public String setApproval(@ModelAttribute("estateid") int estateid, Model model){
+    @GetMapping("/approve/{estateid}")
+    public String setApproval(@PathVariable Integer estateid, Model model){
         String prompt = adminServ.approveRealEstate(estateid);
         model.addAttribute("prompt", prompt);
-        return "admin/estateapproval";
+        return "realestate/estates";
     }
+
+    @GetMapping("/deny/{estateid}")
+    public String setDenial(@PathVariable Integer estateid, Model model){
+        String prompt = adminServ.denyRealEstate(estateid);
+        model.addAttribute("prompt", prompt);
+        return "realestate/estates";
+    }
+
 
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+
+</head>
+<body>
+<div layout:fragment="main-content">
+  <h3>Editing</h3>
+  <form th:action="@{/tenant/edit}" method="post" th:object="${user}">
+
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="form-group row">
+      <label for="username">User Name</label>
+      <input type="text" class="form-control" th:field="*{username}" id="username"/>
+    </div>
+    <div class="form-group row">
+      <label for="email">Email</label>
+      <input type="text" class="form-control" th:field="*{email}" id="email"/>
+    </div>
+
+
+    <input type="submit" class="btn btn-primary" value="Save Changes"/>
+    <a href="/tenant" class="btn btn-primary" >Cancel</a>
+  </form>
+  <div th:text="${msg}"></div>
+</div>
+</body>
+</html>

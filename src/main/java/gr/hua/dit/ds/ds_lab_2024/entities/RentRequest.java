@@ -10,15 +10,13 @@ public class RentRequest
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id")
-    private ApprovalStatus approvalStatus;
-
-    @ManyToOne
+    @Column
+    private String approvalStatus;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "estate_id")
     private RealEstate realEstate;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User tenant;
 
@@ -32,11 +30,11 @@ public class RentRequest
         this.id = id;
     }
 
-    public ApprovalStatus getApprovalStatus() {
+    public String getApprovalStatus() {
         return approvalStatus;
     }
 
-    public void setApprovalStatus(ApprovalStatus approvalStatus) {
+    public void setApprovalStatus(String approvalStatus) {
         this.approvalStatus = approvalStatus;
     }
 
