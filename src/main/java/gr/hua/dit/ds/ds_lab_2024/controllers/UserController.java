@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -94,23 +95,24 @@ public class UserController {
         return "auth/user";
     }
 
-   @GetMapping("/user/role/delete/{user_id}/{role_id}")
-    public String deleteRolefromUser(@PathVariable Long user_id, @PathVariable Integer role_id, Model model){
+    @PostMapping("/user/role/delete/{user_id}/{role_id}")
+    public String deleteRolefromUser(@PathVariable Long user_id, @PathVariable Integer role_id, Model model) {
         User user = userService.getUser(user_id);
-        Role role = roleRepository.findById(role_id).get();
-        user.getRoles().remove(role);
-        System.out.println("Roles: "+user.getRoles());
-        userService.updateUser(user);
+        Role role = roleRepository.findById(role_id).orElse(null);
+        if (role != null) {
+            user.getRoles().remove(role);
+            System.out.println("Roles: " + user.getRoles());
+            userService.updateUser(user);
+        }
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("roles", roleRepository.findAll());
+
+        userService.refreshAuthenticatedUser();
         return "auth/users";
     }
 
-    //Δεν έχω καταλάβει πως να το κάνω να κάνει update τον ρόλο
-    //όπως το έχω κάνει για να κάνει Update τα άλλα στοιχεία για τον authenticated user. χρειάζεται log out log in
 
-
-    @GetMapping("/user/role/add/{user_id}/{role_id}")
+    @PostMapping("/user/role/add/{user_id}/{role_id}")
     public String addRoletoUser(@PathVariable Long user_id, @PathVariable Integer role_id, Model model){
         User user = userService.getUser(user_id);
         Role role = roleRepository.findById(role_id).get();
@@ -120,20 +122,8 @@ public class UserController {
 
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("roles", roleRepository.findAll());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails newUserDetails = new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                authentication.getAuthorities()
-        );
-
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(newUserDetails, authentication.getCredentials(), authentication.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
+        userService.refreshAuthenticatedUser();
         return "auth/users";
 
     }
-
-
-
-
 }

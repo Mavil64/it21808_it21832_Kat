@@ -4,6 +4,7 @@ import gr.hua.dit.ds.ds_lab_2024.entities.Role;
 import gr.hua.dit.ds.ds_lab_2024.entities.User;
 import gr.hua.dit.ds.ds_lab_2024.repository.RoleRepository;
 import gr.hua.dit.ds.ds_lab_2024.repository.UserRepository;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -189,5 +190,32 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void updateOrInsertRole(Role role) {
         roleRepository.updateOrInsert(role);
+    }
+
+    @Transactional
+    public void refreshAuthenticatedUser() {
+        // Retrieve the current authentication
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new RuntimeException("No authentication found in the SecurityContext");
+        }
+
+        // Get the current user's email (username) from the authentication
+        String email = authentication.getName();
+
+        // Load the updated user details using your loadUserByUsername method
+        UserDetails updatedUserDetails = loadUserByUsername(email);
+
+        // Create a new authentication token with the updated details
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                updatedUserDetails,
+                updatedUserDetails.getPassword(),
+                updatedUserDetails.getAuthorities()
+        );
+
+        // Set the new authentication in the SecurityContext
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+        System.out.println("Security context refreshed for user: " + email);
     }
 }

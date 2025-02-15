@@ -14,11 +14,13 @@
         <h2 class="masthead-brand">Rent A Thingy</h2>
         <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link" href="/" data-path="/" >Home</a>
+            <a sec:authorize="hasRole('RENTER')"class="nav-link" th:href="@{/rentrequest/requestlist}" data-path="/requestlist">Requests </a>
             <a class="nav-link" th:href="@{/realestate/estates}" data-path="/estates">Properties</a>
-            <a sec:authorize="hasRole('RENTER')"class="nav-link" th:href="@{/realestate/new}" data-path="/realestate">New RealEstate</a>
-            <a class="nav-link" th:href="@{/tenant/tenants}" data-path="/tenants">Tenants</a>
+            <a sec:authorize="hasRole('RENTER')"class="nav-link" th:href="@{/realestate/new}" data-path="/realestate">New Property</a>
+            <a sec:authorize="hasRole('ADMIN')"class="nav-link" th:href="@{/tenant/tenants}" data-path="/tenants">Tenants</a>
+            <a sec:authorize="hasRole('ADMIN')"class="nav-link" th:href="@{/renter/renters}" data-path="/renters">Renters</a>
             <a sec:authorize="hasRole('TENANT')"class="nav-link" th:href="@{/tenant}" data-path="/tenant">Tenant profile</a>
-            <a sec:authorize="hasRole('TENANT')" class="nav-link" href="/users">Users</a>
+            <a sec:authorize="hasRole('ADMIN')" class="nav-link" href="/users">Users</a>
             </a>
             <a sec:authorize="!isAuthenticated()"  class="nav-link">
                 <a  class="nav-link" href="/login">Login</a>

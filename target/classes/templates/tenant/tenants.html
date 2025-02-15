@@ -11,7 +11,7 @@
 <body>
 <div layout:fragment="main-content">
     <div th:if="${ not#lists.isEmpty(tenants)}">
-        <table class="table">
+        <table class="table table-bordered table-striped">
             <thead>
             <tr>
                 <th>Username</th>
@@ -33,7 +33,6 @@
     <div th:if="${ #lists.isEmpty(tenants)}">
         No Tenants found!
     </div>
-    <a sec:authorize="hasRole('ADMIN')" href="/tenant/register" class="btn btn-primary" role="button">Create new Tenant</a>
 </div>
 </body>
 </html>

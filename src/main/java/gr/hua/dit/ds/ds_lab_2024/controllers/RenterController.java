@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+
 import java.security.Principal;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class RenterController {
         this.rentRequestService = rentRequestService;
     }
 
-    @GetMapping("/tenants")
+    @GetMapping("/renters")
     public String showRenters(Model model){
         model.addAttribute("renters", userService.getRenters());
         return "renter/renters";
@@ -88,14 +89,6 @@ public class RenterController {
         User user = userService.getUserByEmail(principal.getName());
         model.addAttribute("user", user);
         return "renter/edit";
-    }
-
-    @GetMapping("/requests")
-    public String showRequests(Model model)
-    {
-        List<RentRequest> requests = rentRequestService.getRequestsById(userService.getSpringUserByEmail().getId());
-        model.addAttribute("requests", requests);
-        return "rentrequest/requestlist";
     }
 
 }

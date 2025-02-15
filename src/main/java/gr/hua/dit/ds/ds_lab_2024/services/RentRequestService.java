@@ -45,6 +45,7 @@ public class RentRequestService {
     @Transactional
     public void updateRequestStatus(Integer id, String status) {
         Optional<RentRequest> optionalRequest = rentRequestRepository.findById(id);
+        System.out.println(optionalRequest.get().getId());
         if (optionalRequest.isPresent()) {
             RentRequest request = optionalRequest.get();
             request.setApprovalStatus(status);

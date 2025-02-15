@@ -1,43 +1,47 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}" xmlns:sec="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
-    <title>Rent Requests</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <title>RequestList</title>
 </head>
 <body>
-<div class="container mt-5">
-    <h1>Rent Requests</h1>
-    <table class="table table-bordered">
+<div layout:fragment="main-content">
+    <h1>Rent Requests for Your Estates</h1>
+    <table class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Approval Status</th>
+            <th>Estate</th>
             <th>Tenant</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="request : ${requests}">
             <td th:text="${request.id}">1</td>
-            <td th:text="${request.approvalStatus}">Pending</td>
-            <td th:text="${request.tenant.name}">Tenant Name</td>
+            <!-- Assuming your RealEstate has a 'name' field -->
+            <td th:text="${request.realEstate.estate_name}">Estate Name</td>
+            <!-- Assuming your User (tenant) has a 'username' or 'email' field -->
+            <td th:text="${request.tenant.username}">Tenant Username</td>
+            <td th:text="${request.approvalStatus}">PENDING</td>
             <td>
-
-                <form th:action="@{'/requests/approve/' + ${request.id}}" method="post" style="display:inline;">
+                <!-- Approve Form -->
+                <form th:action="@{'/rentrequest/approve/' + ${request.id}}"
+                      method="post" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <button type="submit" class="btn btn-success btn-sm">Approve</button>
                 </form>
-
-                <!-- Deny Request Button -->
-                <form th:action="@{'/requests/deny/' + ${request.id}}" method="post" style="display:inline;">
+                <!-- Deny Form -->
+                <form th:action="@{'/rentrequest/deny/' + ${request.id}}"
+                      method="post" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <button type="submit" class="btn btn-danger btn-sm">Deny</button>
                 </form>
-
-                <!-- Tenant Details Button -->
-                <a class="btn btn-outline-light btn-sm"
-                   th:href="@{'/tenant/' + ${request.tenant.id}}">
-                    Tenant details
-                </a>
             </td>
         </tr>
         </tbody>

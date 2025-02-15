@@ -50,27 +50,4 @@ public class RealEstateController {
         return "realestate/estates";
     }
 
-    @GetMapping("/assigntenant/{id}")
-    public String showAssignTenanttoEstate(@PathVariable int id, Model model)
-    {
-        RealEstate estate = estateService.getEstate(id);
-        List<User> tenants = userService.getTenants();
-        model.addAttribute("estate", estate);
-        model.addAttribute("tenants", tenants);
-        return "realestate/assigntenant";
-    }
-
-    @PostMapping("/assigntenant/{id}")
-    public String assignTenanttoEstate(@PathVariable int id, @RequestParam(value = "tenant", required = true)
-    Long tenantId, Model model) {
-        System.out.println(tenantId);
-        User tenant = userService.getUser(tenantId);
-        RealEstate estate = estateService.getEstate(id);
-        estateService.assignTenanttoEstate(id, tenant);
-        return "realestate/assigntenant";
-    }
-
-
-
-
 }

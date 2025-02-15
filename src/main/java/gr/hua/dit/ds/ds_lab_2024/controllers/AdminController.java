@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.ArrayList;
 
 @Controller
@@ -21,26 +22,19 @@ public class AdminController {
         this.adminServ = adminServ;
     }
 
-    @GetMapping("/approve")
-    public String showApproval(Model model){
-        int estateid = 0;
-        model.addAttribute("estateid", estateid);
-        return "admin/estateapproval";
 
-    }
-
-    @GetMapping("/approve/{estateid}")
+    @PostMapping("/approve/{estateid}")
     public String setApproval(@PathVariable Integer estateid, Model model){
         String prompt = adminServ.approveRealEstate(estateid);
-        model.addAttribute("prompt", prompt);
-        return "realestate/estates";
+        model.addAttribute("prompt", prompt); //We ended up not using this prompt idea too much
+        return "redirect:/estates";
     }
 
-    @GetMapping("/deny/{estateid}")
+    @PostMapping("/deny/{estateid}")
     public String setDenial(@PathVariable Integer estateid, Model model){
         String prompt = adminServ.denyRealEstate(estateid);
         model.addAttribute("prompt", prompt);
-        return "realestate/estates";
+        return "redirect:/estates";
     }
 
 

@@ -20,7 +20,15 @@ public class RentRequest
     @JoinColumn(name = "user_id")
     private User tenant;
 
-    // Getters and Setters
+
+    public RentRequest(String approvalStatus, RealEstate realEstate, User tenant) {
+        this.approvalStatus = approvalStatus;
+        this.realEstate = realEstate;
+        this.tenant = tenant;
+    }
+
+    public RentRequest() {
+    }
 
     public Integer getId() {
         return id;

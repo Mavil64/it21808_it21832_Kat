@@ -29,20 +29,32 @@
                     <!-- Edit Button -->
                     <a class="btn btn-info" th:href="@{/user/{id}(id=${user.id})}">Edit</a>
 
-                    <!-- Delete Role Buttons -->
+                    <span th:each="role : ${user.roles}">
+                    <form th:if="${role.name != 'ROLE_ADMIN'}"
+                          th:action="@{/user/role/delete/{id}/{role_id}(id=${user.id},role_id=${role.id})}"
+                          method="post"
+                          style="display:inline;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="btn btn-danger" th:utext="'Delete ' + ${role.name}"></button>
+                    </form>
+
+                    <!-- Delete Role Buttons
                     <span th:each="role : ${user.roles}">
                     <a th:if="${role.name != 'ROLE_ADMIN'}"
                     class="btn btn-danger"
                     th:href="@{/user/role/delete/{id}/{role_id}(id=${user.id},role_id=${role.id})}"
-                    th:utext="'Delete ' + ${role.name}"></a>
+                    th:utext="'Delete ' + ${role.name}"></a> -->
             </span>
 
                     <!-- Add Role Buttons -->
                     <span th:each="role : ${roles}">
-        <a th:if="${!user.roles.contains(role) and role.name != 'ROLE_ADMIN'}"
-           class="btn btn-success"
-           th:href="@{/user/role/add/{id}/{role_id}(id=${user.id},role_id=${role.id})}"
-           th:utext="'Add ' + ${role.name}"></a>
+        <form th:if="${!user.roles.contains(role) and role.name != 'ROLE_ADMIN'}"
+              th:action="@{/user/role/add/{id}/{role_id}(id=${user.id},role_id=${role.id})}"
+              method="post"
+              style="display:inline;">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <button type="submit" class="btn btn-success" th:utext="'Add ' + ${role.name}"></button>
+</form>
     </span>
                 </td>
 
